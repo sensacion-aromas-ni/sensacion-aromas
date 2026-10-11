@@ -588,6 +588,97 @@
         .btn-add-cart:hover { background-color: var(--primary-dark); }
         .btn-add-cart:active { transform: scale(0.98); }
 
+        /* ===== CARRUSEL 3D (espiral tipo reloj) — solo sección Masglo ===== */
+        .carousel-3d-wrap {
+            position: relative;
+            padding: 10px 56px 10px;
+        }
+        body.category-view .carousel-3d-wrap,
+        body.search-active .carousel-3d-wrap {
+            display: none;
+        }
+        body:not(.category-view):not(.search-active) #slider-masglo.slider-container {
+            display: none;
+        }
+        body:not(.category-view):not(.search-active) #masglo .slider-nav-controls {
+            display: none;
+        }
+        .carousel-3d-stage {
+            position: relative;
+            height: 360px;
+            perspective: 1400px;
+            perspective-origin: 50% 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .carousel-3d-ring {
+            position: relative;
+            width: 1px;
+            height: 1px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .carousel-3d-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 190px;
+            margin-left: -95px;
+            margin-top: -150px;
+            transform-style: preserve-3d;
+            transition: opacity 0.2s linear;
+        }
+        .carousel-3d-item .product-card {
+            flex: none;
+            width: 190px;
+            cursor: pointer;
+        }
+        .carousel-3d-item .product-img-container {
+            height: 150px;
+        }
+        .carousel-3d-item .product-desc {
+            display: none;
+        }
+        .carousel-3d-item .product-name {
+            font-size: 1rem;
+        }
+        .carousel-3d-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: var(--text-dark);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: all 0.2s;
+        }
+        .carousel-3d-btn:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+        .carousel-3d-btn.prev { left: 0; }
+        .carousel-3d-btn.next { right: 0; }
+
+        @media (max-width: 600px) {
+            .carousel-3d-wrap { padding: 10px 44px; }
+            .carousel-3d-stage { height: 300px; perspective: 1000px; }
+            .carousel-3d-item { width: 150px; margin-left: -75px; margin-top: -125px; }
+            .carousel-3d-item .product-card { width: 150px; }
+            .carousel-3d-item .product-img-container { height: 120px; }
+            .carousel-3d-btn { width: 36px; height: 36px; }
+        }
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -4458,11 +4549,21 @@
                     </div>
                 </div>
                 <div class="subcat-tabs" id="subcat-masglo">
-                    <button class="subcat-btn active" data-subcat="todos" onclick="filterSubcat('masglo', 'todos', this)">Todos</button>
-                    <button class="subcat-btn" data-subcat="base" onclick="filterSubcat('masglo', 'base', this)">Bases</button>
-                    <button class="subcat-btn" data-subcat="brillo" onclick="filterSubcat('masglo', 'brillo', this)">Brillos</button>
-                    <button class="subcat-btn" data-subcat="pintura" onclick="filterSubcat('masglo', 'pintura', this)">Pinturas de Uñas</button>
+                    <button class="subcat-btn active" data-subcat="todos" onclick="filterMasglo('todos', this)">Todos</button>
+                    <button class="subcat-btn" data-subcat="base" onclick="filterMasglo('base', this)">Bases</button>
+                    <button class="subcat-btn" data-subcat="brillo" onclick="filterMasglo('brillo', this)">Brillos</button>
+                    <button class="subcat-btn" data-subcat="pintura" onclick="filterMasglo('pintura', this)">Pinturas de Uñas</button>
                 </div>
+
+                <!-- Carrusel 3D tipo espiral, gira solo como las manecillas del reloj y también se controla con flechas -->
+                <div class="carousel-3d-wrap">
+                    <button class="carousel-3d-btn prev" onclick="rotateMasglo(-1)" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+                    <div class="carousel-3d-stage" id="carousel3dStage-masglo">
+                        <div class="carousel-3d-ring" id="carousel3dRing-masglo"></div>
+                    </div>
+                    <button class="carousel-3d-btn next" onclick="rotateMasglo(1)" aria-label="Siguiente"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
                 <div class="slider-container" id="slider-masglo">
                     <div class="product-card" data-subcat="base">
                         <div class="product-img-container"><img src="productos/esmaltes%20masglo/5023839125085293691.jpg" alt="Base 8 en 1 Clinical"></div>
@@ -4472,6 +4573,18 @@
                             <div class="product-footer">
                                 <div class="product-price-row"><span class="product-price">$14.00</span><a href="https://wa.me/50583743021?text=Hola,%20quiero%20consultar%20sobre%20Base%208%20en%201%20Clinical" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Consultar</a></div>
                                 <button class="btn-add-cart" onclick="addToCart('Base 8 en 1 Clinical', 14.00)"><i class="fas fa-cart-plus"></i> Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-subcat="base">
+                        <div class="product-img-container"><img src="productos/esmaltes%20masglo/nuevos%20productos/totalcare.png" alt="Total·Care Ejecutiva"></div>
+                        <div class="product-info">
+                            <h3 class="product-name">Total·Care Ejecutiva</h3>
+                            <p class="product-desc">Masglo Clinical: base recuperadora de uñas dañadas, con tono y brillo en uno, secado rápido.</p>
+                            <div class="product-footer">
+                                <div class="product-price-row"><span class="product-price">$14.00</span><a href="https://wa.me/50583743021?text=Hola,%20quiero%20consultar%20sobre%20Total%C2%B7Care%20Ejecutiva" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Consultar</a></div>
+                                <button class="btn-add-cart" onclick="addToCart('Total·Care Ejecutiva', 14.00)"><i class="fas fa-cart-plus"></i> Agregar</button>
                             </div>
                         </div>
                     </div>
@@ -5208,18 +5321,6 @@
                         </div>
                     </div>
 
-                    <div class="product-card" data-subcat="base">
-                        <div class="product-img-container"><img src="productos/esmaltes%20masglo/nuevos%20productos/Photoroom-20261010_201233.png" alt="Total·Care Ejecutiva"></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Total·Care Ejecutiva</h3>
-                            <p class="product-desc">Masglo Clinical: base recuperadora de uñas dañadas, con tono y brillo en uno, secado rápido.</p>
-                            <div class="product-footer">
-                                <div class="product-price-row"><span class="product-price">$14.00</span><a href="https://wa.me/50583743021?text=Hola,%20quiero%20consultar%20sobre%20Total%C2%B7Care%20Ejecutiva" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Consultar</a></div>
-                                <button class="btn-add-cart" onclick="addToCart('Total·Care Ejecutiva', 14.00)"><i class="fas fa-cart-plus"></i> Agregar</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </section>
 
@@ -5396,6 +5497,137 @@
         function scrollSlider(sliderId, distance) {
             let container = document.getElementById(sliderId);
             container.scrollBy({ left: distance, behavior: 'smooth' });
+        }
+
+        // ===== CARRUSEL 3D (espiral tipo reloj) =====
+        const carousel3DState = {};
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function buildCarousel3D(sectionId, subcat) {
+            const source = document.getElementById('slider-' + sectionId);
+            const ring = document.getElementById('carousel3dRing-' + sectionId);
+            if (!source || !ring) return;
+
+            const cards = Array.from(source.querySelectorAll('.product-card')).filter(function (c) {
+                return subcat === 'todos' || c.getAttribute('data-subcat') === subcat;
+            });
+
+            ring.innerHTML = '';
+            const n = Math.max(cards.length, 1);
+            const angleStep = 360 / n;
+            const itemWidth = window.innerWidth <= 600 ? 150 : 190;
+            const minRadius = window.innerWidth <= 600 ? 220 : 320;
+            const radius = Math.max(minRadius, Math.round((itemWidth / 2) / Math.tan(Math.PI / Math.max(n, 3))) + 60);
+
+            const items = [];
+            cards.forEach(function (card, i) {
+                const item = document.createElement('div');
+                item.className = 'carousel-3d-item';
+                const baseAngle = i * angleStep;
+                item.style.transform = 'rotateY(' + baseAngle + 'deg) translateZ(' + radius + 'px)';
+                item.appendChild(card.cloneNode(true));
+                ring.appendChild(item);
+                items.push({ el: item, baseAngle: baseAngle });
+            });
+
+            const prevState = carousel3DState[sectionId];
+            const state = carousel3DState[sectionId] = {
+                angle: prevState ? prevState.angle : 0,
+                speed: 8,
+                radius: radius,
+                items: items,
+                hoverPause: false,
+                manualPause: false,
+                animating: false,
+                targetAngle: 0,
+                lastTime: null,
+                raf: prevState ? prevState.raf : null,
+                resumeTimer: prevState ? prevState.resumeTimer : null
+            };
+            applyCarousel3DFrame(sectionId);
+        }
+
+        function applyCarousel3DFrame(sectionId) {
+            const state = carousel3DState[sectionId];
+            const ring = document.getElementById('carousel3dRing-' + sectionId);
+            if (!state || !ring) return;
+            ring.style.transform = 'rotateY(' + state.angle + 'deg)';
+            state.items.forEach(function (it) {
+                const totalRad = (state.angle + it.baseAngle) * Math.PI / 180;
+                const facing = Math.cos(totalRad);
+                const opacity = 0.3 + (facing + 1) / 2 * 0.7;
+                const scale = 0.6 + (facing + 1) / 2 * 0.5;
+                it.el.style.opacity = opacity.toFixed(2);
+                it.el.style.transform = 'rotateY(' + it.baseAngle + 'deg) translateZ(' + state.radius + 'px) scale(' + scale.toFixed(3) + ')';
+            });
+        }
+
+        function startCarousel3DLoop(sectionId) {
+            const state = carousel3DState[sectionId];
+            if (!state) return;
+            if (state.raf) cancelAnimationFrame(state.raf);
+            state.lastTime = null;
+
+            function tick(now) {
+                if (!carousel3DState[sectionId]) return;
+                const st = carousel3DState[sectionId];
+                if (st.lastTime === null) st.lastTime = now;
+                const dt = (now - st.lastTime) / 1000;
+                st.lastTime = now;
+
+                if (st.animating) {
+                    const diff = st.targetAngle - st.angle;
+                    if (Math.abs(diff) < 0.3) {
+                        st.angle = st.targetAngle;
+                        st.animating = false;
+                    } else {
+                        st.angle += diff * 0.15;
+                    }
+                } else if (!prefersReducedMotion && !st.hoverPause && !st.manualPause) {
+                    st.angle += st.speed * dt;
+                }
+
+                applyCarousel3DFrame(sectionId);
+                st.raf = requestAnimationFrame(tick);
+            }
+            state.raf = requestAnimationFrame(tick);
+        }
+
+        function rotateMasglo(dir) {
+            const state = carousel3DState['masglo'];
+            if (!state) return;
+            state.manualPause = true;
+            state.targetAngle = state.angle + dir * -45;
+            state.animating = true;
+            clearTimeout(state.resumeTimer);
+            state.resumeTimer = setTimeout(function () { state.manualPause = false; }, 2600);
+        }
+
+        function filterMasglo(subcat, btn) {
+            filterSubcat('masglo', subcat, btn);
+            buildCarousel3D('masglo', subcat);
+        }
+
+        function initCarousel3D(sectionId) {
+            buildCarousel3D(sectionId, 'todos');
+            startCarousel3DLoop(sectionId);
+            const stage = document.getElementById('carousel3dStage-' + sectionId);
+            if (stage) {
+                stage.addEventListener('mouseenter', function () {
+                    carousel3DState[sectionId].hoverPause = true;
+                });
+                stage.addEventListener('mouseleave', function () {
+                    carousel3DState[sectionId].hoverPause = false;
+                });
+                stage.addEventListener('touchstart', function () {
+                    carousel3DState[sectionId].hoverPause = true;
+                }, { passive: true });
+            }
+            document.addEventListener('visibilitychange', function () {
+                const st = carousel3DState[sectionId];
+                if (!st) return;
+                st.hoverPause = document.hidden ? true : st.hoverPause;
+            });
         }
 
         // ===== CARRITO =====
@@ -6020,6 +6252,7 @@
         updateDeliveryInfoText();
         updateAccountUI();
         updateCart();
+        initCarousel3D('masglo');
         initAutoCarousels();
     </script>
 </body>
